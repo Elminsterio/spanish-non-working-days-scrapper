@@ -1,33 +1,19 @@
 
 const puppeteer = require('puppeteer');
-const accentsRemover = require('./utils/stringCleaner.util');
+const { accentsRemover } = require('./utils/stringCleaner.util');
 
 async function ScrapFestivos(comunidad, provincia, municipio, year = new Date().getFullYear().toString()) {
-    
-    let spanishMonths = {
-        enero: [],
-        febrero: [],
-        marzo: [],
-        abril: [],
-        mayo: [],
-        junio: [],
-        julio: [],
-        agosto: [],
-        septiembre: [],
-        octubre: [],
-        noviembre: [],
-        diciembre: []
-    };
     
     const treatedComunidad = accentsRemover(comunidad);
     const treatedProvincia = accentsRemover(provincia);
     const treatedMunicipio = accentsRemover(municipio);
     
+    const nonWorkingDays = new Map();  
+
     let browser;
     let page;
     
     try {
-
         browser = await puppeteer.launch({ headless: true });
         page = await browser.newPage();
         
@@ -37,50 +23,19 @@ async function ScrapFestivos(comunidad, provincia, municipio, year = new Date().
             
         for(let i = 1; i <= 12; i++) {
             
-            if(i < 10) i = '0' + i;
-                
-            const days = await page.$$eval(`.bm-calendar-month-${i} [title]`, result => result.map(results => results.textContent))
-                
-            switch (i) {
-                case '01':
-                    spanishMonths.enero = days;
-                    break;        
-                case '02':
-                    spanishMonths.febrero = days;
-                    break;
-                case '03':
-                    spanishMonths.marzo = days;
-                    break;
-                case '04':
-                    spanishMonths.abril = days;
-                    break;
-                case '05':
-                    spanishMonths.mayo = days;
-                    break;
-                case '06':
-                    spanishMonths.junio = days;
-                    break;
-                case '07':
-                    spanishMonths.julio = days;
-                    break;
-                case '08':
-                    spanishMonths.agosto = days;
-                    break;
-                case '09':
-                    spanishMonths.septiembre = days;
-                    break;
-                case 10:
-                    spanishMonths.octubre = days;
-                    break;
-                case 11:
-                    spanishMonths.noviembre = days;
-                    break;
-                case 12:
-                    spanishMonths.diciembre = days;
-                    break;
-            }
+            let numberMonthOnDOM = i < 10 ? '0' + i : i;
+            
+            const nationalHoliday = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} .bm-calendar-state-nacional:not(.bm-calendar-weekend)`, 
+                                    result => {return {nationalHoliday: result.map(results => results.textContent)}}); 
+            const autonomicHoliday = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} .bm-calendar-state-autonomico:not(.bm-calendar-weekend)`, 
+                                    result => {return {autonomicHoliday: result.map(results => results.textContent)}});            
+            const localHoliday = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} .bm-calendar-state-local:not(.bm-calendar-weekend)`,
+                                    result => {return {localHoliday: result.map(results => results.textContent)}}); 
+            const weekendDays = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} td.bm-calendar-weekend`, 
+                                    result => {return {weekendDays: result.map(results => results.textContent )}});           
+            nonWorkingDays.set(i, {...nationalHoliday, ...autonomicHoliday, ...localHoliday, ...weekendDays});
         }
-        console.log(spanishMonths);
+        console.log(nonWorkingDays);
     } catch(error) {
         console.log('The page was not found or the data entered is wrong');
         console.log('---------------------------------------------------');
@@ -90,10 +45,10 @@ async function ScrapFestivos(comunidad, provincia, municipio, year = new Date().
         await browser.close();
     }
         
-    return spanishMonths;
+    return nonWorkingDays;
 
 }
 
-ScrapFestivos('dawdawd', 'dawdw', 'dwdwafaw', 2022)
+ScrapFestivos('comunidad de madrid', 'madrid', 'madrid', 2022)
 
 module.exports = ScrapFestivos;
