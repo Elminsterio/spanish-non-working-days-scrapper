@@ -1,18 +1,25 @@
+import { Municipio } from "./src/Domain/Entities/Municipio";
 
-const puppeteer = require('puppeteer');
-const { accentsRemover } = require('./utils/stringCleaner.util');
+import puppeteer from 'puppeteer';
+import municipios from './src/Assets/municipiosClean.json';
+import { accentsRemover } from './utils/stringCleaner.util';
+import { HolidayMapElements } from "./src/Domain/Entities/Holiday";
 
-async function ScrapFestivos(comunidad, provincia, municipio, year = new Date().getFullYear().toString()) {
-    
-    const treatedComunidad = accentsRemover(comunidad);
-    const treatedProvincia = accentsRemover(provincia);
-    const treatedMunicipio = accentsRemover(municipio);
-    
-    const nonWorkingDays = new Map();  
+export default async function mainScraper(year: number, municipio: Municipio['municipio']): Promise<any> {
 
-    let browser;
-    let page;
-    
+    const municipioFinded = municipios.find((municipioFind: Municipio)=> municipioFind.municipio === municipio);
+    if(!municipioFinded) return console.log('error');
+
+    const treatedMunicipio = accentsRemover(municipioFinded?.municipio);
+    const treatedComunidad = accentsRemover(municipioFinded?.comunidad);
+    const treatedProvincia = accentsRemover(municipioFinded?.provincia);
+
+    const nonWorkingDays = {holidays: new Map()};  
+
+    let browser: puppeteer.Browser | undefined;
+    let page: puppeteer.Page | undefined;
+
+    console.log(`https://calendarios.ideal.es/laboral/${treatedComunidad}/${treatedProvincia}/${treatedMunicipio}/${year}`);
     try {
         browser = await puppeteer.launch({ headless: true });
         page = await browser.newPage();
@@ -31,24 +38,19 @@ async function ScrapFestivos(comunidad, provincia, municipio, year = new Date().
                                     result => {return {autonomicHoliday: result.map(results => results.textContent)}});            
             const localHoliday = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} .bm-calendar-state-local:not(.bm-calendar-weekend)`,
                                     result => {return {localHoliday: result.map(results => results.textContent)}}); 
-            const weekendDays = await page.$$eval(`.bm-calendar-month-${numberMonthOnDOM} td.bm-calendar-weekend`, 
-                                    result => {return {weekendDays: result.map(results => results.textContent )}});           
-            nonWorkingDays.set(i, {...nationalHoliday, ...autonomicHoliday, ...localHoliday, ...weekendDays});
+            
+            const holidays = {...nationalHoliday, ...autonomicHoliday, ...localHoliday};
+
+            nonWorkingDays.holidays.set(i as HolidayMapElements['month'], holidays);
         }
-        console.log(nonWorkingDays);
+
     } catch(error) {
         console.log('The page was not found or the data entered is wrong');
         console.log('---------------------------------------------------');
         console.log(error);
     } finally {
-        await page.close();
-        await browser.close();
+        if(page !== undefined) await page.close();
+        if(browser !== undefined) await browser.close();
     }
-        
     return nonWorkingDays;
-
 }
-
-ScrapFestivos('comunidad de madrid', 'madrid', 'madrid', 2022)
-
-module.exports = ScrapFestivos;

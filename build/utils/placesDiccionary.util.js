@@ -1,20 +1,22 @@
-
-let provinciasScrap2 = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.comunidades = exports.provincias = exports.provinciasScrap2 = void 0;
+exports.provinciasScrap2 = {
     alava: 'vi',
     albacete: 'ab',
     alicante: 'a',
     almeria: 'al',
-    asturias: 'as',
+    'principado de asturias': 'as',
     avila: 'av',
     badajoz: 'ba',
-    baleares: 'pm',
+    'islas baleares': 'pm',
     barcelona: 'b',
     burgos: 'bu',
     caceres: 'cc',
     cadiz: 'ca',
     cantabria: 's',
     castellon: 'cs',
-    ciudadreal: 'cr',
+    'ciudad real': 'cr',
     cordoba: 'cb',
     cuenca: 'cu',
     girona: 'gi',
@@ -24,16 +26,16 @@ let provinciasScrap2 = {
     huelva: 'hu',
     huesca: 'h',
     jaen: 'j',
-    lacoruna: 'c',
-    larioja: 'lo',
-    laspalmas: 'lp',
+    'a coruna': 'c',
+    'la rioja': 'lo',
+    'gran canaria': 'lp',
     leon: 'le',
     lerida: 'll',
     lugo: 'l',
-    madrid: 'm',
+    'comunidad de madrid': 'm',
     malaga: 'ma',
-    murcia: 'mu',
-    navarra: 'na',
+    'region de murcia': 'mu',
+    'comunidad foral de navarra': 'na',
     ourense: 'or',
     palencia: 'pa',
     pontevedra: 'po',
@@ -42,7 +44,7 @@ let provinciasScrap2 = {
     sevilla: 'se',
     soria: 'so',
     tarragona: 't',
-    santacruzdetenerife: 'tf',
+    'tenerife': 'tf',
     teruel: 'te',
     toledo: 'to',
     valencia: 'v',
@@ -52,9 +54,8 @@ let provinciasScrap2 = {
     zaragoza: 'z',
     ceuta: 'ce',
     melilla: 'me'
-}
-
-let provincias = [
+};
+exports.provincias = [
     'ALAVA',
     'ALBACETE',
     'ALICANTE',
@@ -107,9 +108,8 @@ let provincias = [
     'ZARAGOZA',
     'CEUTA',
     'MELILLA'
-]
-
-const comunidades = [
+];
+exports.comunidades = [
     'ANDALUCÍA',
     'ARAGÓN',
     'ASTURIAS',
@@ -129,10 +129,4 @@ const comunidades = [
     'MURCIA',
     'CEUTA',
     'MELILLA'
-]
-
-module.exports = {
-    provincias,
-    comunidades,
-    provinciasScrap2
-}
+];
