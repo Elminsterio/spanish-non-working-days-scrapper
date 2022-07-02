@@ -1,20 +1,20 @@
 
-let provinciasScrap2 = {
+export const provinciasScrap2 = {
     alava: 'vi',
     albacete: 'ab',
     alicante: 'a',
     almeria: 'al',
-    asturias: 'as',
+    'principado de asturias': 'as',
     avila: 'av',
     badajoz: 'ba',
-    baleares: 'pm',
+    'islas baleares': 'pm',
     barcelona: 'b',
     burgos: 'bu',
     caceres: 'cc',
     cadiz: 'ca',
     cantabria: 's',
     castellon: 'cs',
-    ciudadreal: 'cr',
+    'ciudad real': 'cr',
     cordoba: 'cb',
     cuenca: 'cu',
     girona: 'gi',
@@ -24,16 +24,16 @@ let provinciasScrap2 = {
     huelva: 'hu',
     huesca: 'h',
     jaen: 'j',
-    lacoruna: 'c',
-    larioja: 'lo',
-    laspalmas: 'lp',
+    'a coruna': 'c',
+    'la rioja': 'lo',
+    'gran canaria': 'lp',
     leon: 'le',
     lerida: 'll',
     lugo: 'l',
-    madrid: 'm',
+    'comunidad de madrid': 'm',
     malaga: 'ma',
-    murcia: 'mu',
-    navarra: 'na',
+    'region de murcia': 'mu',
+    'comunidad foral de navarra': 'na',
     ourense: 'or',
     palencia: 'pa',
     pontevedra: 'po',
@@ -42,7 +42,7 @@ let provinciasScrap2 = {
     sevilla: 'se',
     soria: 'so',
     tarragona: 't',
-    santacruzdetenerife: 'tf',
+    'tenerife': 'tf',
     teruel: 'te',
     toledo: 'to',
     valencia: 'v',
@@ -54,7 +54,7 @@ let provinciasScrap2 = {
     melilla: 'me'
 }
 
-let provincias = [
+export const provincias = [
     'ALAVA',
     'ALBACETE',
     'ALICANTE',
@@ -109,7 +109,7 @@ let provincias = [
     'MELILLA'
 ]
 
-const comunidades = [
+export const comunidades = [
     'ANDALUCÍA',
     'ARAGÓN',
     'ASTURIAS',
@@ -130,9 +130,3 @@ const comunidades = [
     'CEUTA',
     'MELILLA'
 ]
-
-module.exports = {
-    provincias,
-    comunidades,
-    provinciasScrap2
-}
