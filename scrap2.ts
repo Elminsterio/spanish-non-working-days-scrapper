@@ -18,6 +18,8 @@ export default async function secondaryScraper(anio: number, municipio: Municipi
     let browser: puppeteer.Browser | undefined;
     let page: puppeteer.Page | undefined;
 
+    const nonWorkingDays = {holidays: new Map()};
+
     try {
 
         browser = await puppeteer.launch({ headless: true });  
@@ -28,9 +30,7 @@ export default async function secondaryScraper(anio: number, municipio: Municipi
         await page.goto(`https://www.calendarios-laborales.es/calendario-${municipioTratado}-${anio}-${CapLetters}`, {
             waitUntil: 'networkidle2',
         });
-    
-        const nonWorkingDays = {holidays: new Map()};
-        
+            
         for(let i = 1; i <= 12; i++) {
 
             const nationalHoliday = await page.$$eval('.col-xs-12 .leyenda .nacional', 
@@ -54,7 +54,6 @@ export default async function secondaryScraper(anio: number, municipio: Municipi
             nonWorkingDays.holidays.set(i, {...nationalHoliday, ...autonomicHoliday, ...localHoliday});
         }
 
-        console.log(nonWorkingDays);
     } catch(error) {
         console.log('The page was not found or the data entered is wrong');
         console.log('---------------------------------------------------');
@@ -62,7 +61,8 @@ export default async function secondaryScraper(anio: number, municipio: Municipi
     } finally {
         if(page !== undefined) await page.close();
         if(browser !== undefined) await browser.close();
-    }    
+    }   
+    return nonWorkingDays;
 }
 
 

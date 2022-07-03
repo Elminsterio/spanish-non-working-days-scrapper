@@ -1,4 +1,4 @@
-import { ScraperHoliday } from './src/Data/DataSources/Services/ScraperHoliday1'
+import { ScraperHoliday } from './src/Data/DataSources/Scrapers/ScraperHoliday1'
 
 async function Main() {
   

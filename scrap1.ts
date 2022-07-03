@@ -3,9 +3,9 @@ import { Municipio } from "./src/Domain/Entities/Municipio";
 import puppeteer from 'puppeteer';
 import municipios from './src/Assets/municipiosClean.json';
 import { accentsRemover } from './utils/stringCleaner.util';
-import { HolidayMapElements } from "./src/Domain/Entities/Holiday";
+import { HolidayMapElements, Holiday } from "./src/Domain/Entities/Holiday";
 
-export default async function mainScraper(year: number, municipio: Municipio['municipio']): Promise<any> {
+export default async function mainScraper(year: number, municipio: Municipio['municipio']): Promise<Holiday | void> {
 
     const municipioFinded = municipios.find((municipioFind: Municipio)=> municipioFind.municipio === municipio);
     if(!municipioFinded) return console.log('error');
